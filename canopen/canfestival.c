@@ -3,16 +3,11 @@
 */
 
 #include <windows.h>
-#include "can.h"
+#pragma comment(lib,"ControlCAN.lib")
 
-
-
-// GetProcAddress doesn't have an UNICODE version for NT
-#ifdef UNDER_CE
-  #define myTEXT(str) TEXT(str)
-#else
-  #define myTEXT(str) str
-#endif
+#include "canfestival.h"
+#include "canopen/timer.h"
+#include "canopen/timers_driver.h"
 
 #define MAX_NB_CAN_PORTS 16
 
@@ -115,7 +110,7 @@ int usbCanClose(s_BOARD *board)
 UNS8 usbCanChangeBaudrate(void* fd, char* baud)
 {
     int ret;
-    if(baud = "125")
+    if(baud = ("125"))
         ret = VCI_SetReference(VCI_USBCAN2, 0, 0, 0, (PVOID)0x1C0011);
     return ret;
 }
@@ -146,13 +141,11 @@ DWORD canReceiveLoop(CAN_PORT port)
 }
 
 /***************************************************************************/
-CAN_PORT canOpen(s_BOARD *board, CO_Data * d)
+CAN_PORT canOpen(s_BOARD *board, CO_Data *d)
 {
 	int i;
 	CAN_HANDLE fd0;
 
-
-	  /* Fix of multiple opening one data set, added by J.Fojtik. */
 	if(d->canHandle)
 	{
 	  canClose(d);
@@ -189,9 +182,9 @@ int canClose(CO_Data * d)
     if(port){
         ((CANPort*)d->canHandle)->used = 0;
 
-        res = usbCanClose(port->fd);
+        res = usbCanClose((port->fd));
 
-     //   WaitReceiveTaskEnd(&port->receiveTask);
+        WaitReceiveTaskEnd(&port->receiveTask);
 
         d->canHandle = NULL;
     }
@@ -203,9 +196,9 @@ UNS8 canChangeBaudRate(CAN_PORT port, char* baud)
 {
    if(port){
 		UNS8 res;
-	    //LeaveMutex();
+        LeaveMutex();
         res = usbCanChangeBaudrate(((CANPort*)port)->fd, baud);
-		//EnterMutex();
+        EnterMutex();
 		return res; // OK
 	}
 	return 1; // NOT OK

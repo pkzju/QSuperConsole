@@ -1,7 +1,10 @@
 #ifndef CANUI_H
 #define CANUI_H
 
-#include "candriver/can.h"
+#include "canopen/canfestival.h"
+
+
+
 #include <QFrame>
 #include "thread/canthread.h"
 

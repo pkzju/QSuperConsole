@@ -23,7 +23,6 @@ DEPENDPATH += .
 include(./QFramer/QFramer.pri)
 include(./canOpen/canopen.pri)
 include(./userui/userui.pri)
-include(./canDriver/candriver.pri)
 
 # build dir
 BuildDir =build_$$QT_VERSION
@@ -104,3 +103,5 @@ CONFIG(debug, debug|release) {
 }else {
 
 }
+
+INCLUDEPATH += "./canopen"

@@ -1,14 +1,14 @@
 #include "canui.h"
 #include "ui_canui.h"
-#include<qlibrary.h>
-
 
 CANUi *CANUi::s_Instance = 0;
 
 CANUi::CANUi(QWidget *parent) :
     QFrame(parent),
-    ui(new Ui::CANUi),m_masterBoard(new s_BOARD()),m_masterData(new CO_Data()),
-    m_canThread(CanThread::getInstance())
+    ui(new Ui::CANUi)
+  ,m_masterBoard(new s_BOARD{})
+  ,m_masterData(new CO_Data{0})
+  ,m_canThread(CanThread::getInstance())
 {
     ui->setupUi(this);
     initData();
@@ -19,7 +19,8 @@ CANUi::CANUi(QWidget *parent) :
 
 void CANUi::initData()
 {
-
+//    m_masterBoard->busname = const_cast<char *>("master");
+//    m_masterBoard->baudrate = const_cast<char *>("115200");
 }
 
 void CANUi::initUI()
@@ -54,8 +55,9 @@ CANUi *CANUi::getS_Instance()
 
 void CANUi::on_pushButton_Open_clicked()
 {
-    canOpen(m_masterBoard, m_masterData);
+    if(canOpen(m_masterBoard, m_masterData)){
     m_canThread->mStart();
+    }
 }
 
 void CANUi::on_pushButton_Close_clicked()

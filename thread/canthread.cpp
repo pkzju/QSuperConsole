@@ -1,5 +1,5 @@
 #include "canthread.h"
-#include "candriver/can.h"
+#include "canopen/canfestival.h"
 
 CanThread *CanThread::s_instance = 0;
 
