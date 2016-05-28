@@ -1,6 +1,11 @@
 # QSuperConsole
 Super Console serial port serial bus modbus canbus tcp/ip
 
+
+git推送服务器命令：git push -uf origin master:workon
+以branch 'workon' of github.com:pkzju/QSuperConsole例
+
+
 canopen协议参考：canopen/CANOpen_memento.pdf CANopen_meno.pdf
 CanFestival源码手册：canopen/manual_en.pdf
 
