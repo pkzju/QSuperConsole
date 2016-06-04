@@ -112,7 +112,7 @@ QLabel{
     qproperty-alignment: AlignCenter;
 	
     /*font-family: 'Verdana';*/
-    font-size: 16px;
+    font-size: 14px;
 
 }
 
@@ -136,8 +136,46 @@ QLabel#qssBuilderLabel{
 
 /* ******************QCheckBox****************** */
 QCheckBox{
-	font-size: 16px;
-	alignment:right}
+        font-size: 14px;
+        alignment:center}
+
+
+QRadioButton{
+        font-size: 14px;
+        alignment:center}
+
+    /*RadioButton样式设置*/
+    QRadioButton::indicator {
+        width: 17px;
+        height: 17px;
+    }
+    /*单选框未选中样式*/
+    QRadioButton::indicator::unchecked {
+
+        image: url(:/images/skin/images/radiob-unchecked.png);
+    }
+    /*单选框选中样式*/
+    QRadioButton::indicator::checked {
+        image: url(:/images/skin/images/radiob-checked.png);
+    }
+    /*RadioButton和checkbox字体和间距设置*/
+    QRadioButton ,QCheckBox{
+        spacing: 5px;
+        font-size: 15px;
+    }
+    /*checkbox样式设置*/
+    QCheckBox::indicator {
+        width: 26px;
+        height: 50px;
+    }
+    /*未选中*/
+    QCheckBox::indicator::unchecked {
+        image: url(:/images/skin/images/checkb-unche.png);
+    }
+    /*选中*/
+    QCheckBox::indicator::checked {
+        image: url(:/images/skin/images/checkb_check.png);
+    }
 	
 /* ******************QPushButton****************** */
 QPushButton{
@@ -291,9 +329,12 @@ QPushButton#canBtn{
     background-color: transparent;
  	border-style: none;
 	border-width: 0px;
+	border-radius: 3px;
     color: white;
     text-align: center bottom;
     padding-bottom: 2px;
+	font-size:18px;
+	font-weight: bold;
 }
 
 QPushButton#canBtn:hover{
@@ -319,14 +360,20 @@ QPushButton#serialportBtn{
     color: white;
     text-align: center bottom;
     padding-bottom: 2px;
+	font-size:18px;
+	font-weight: bold;
 }
 
 QPushButton#serialportBtn:hover{
-    background-image: url(:/skin/icons/light/appbar.connect.png);
+    background-color: rgb(77, 176, 251);
+    color: white;
+    border: 0px solid rgba(14, 142, 231, 255);
 }
 
 QPushButton#serialportBtn:checked{
-     background-image: url(:/skin/icons/light/appbar.connect.png);
+    background-color: rgb(62, 165, 250);
+    color: white;
+    border: 0px solid rgba(14, 142, 231, 255);
 }
 
 QPushButton#serialportBtn:flat{
@@ -361,7 +408,7 @@ QGroupBox {
 /*	border: 0.5px solid rgba(12, 112, 208, 255);*/
     margin-top: 3px; 
 	padding-top: 5px;
-	font-size: 16px;
+        font-size: 14px;
 }
 
 QGroupBox::title {

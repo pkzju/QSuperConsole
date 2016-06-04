@@ -2,11 +2,12 @@
 #define CANUI_H
 
 #include "canopen/canfestival.h"
-
-
+#include <QCanBusFrame>
 
 #include <QFrame>
 #include "thread/canthread.h"
+
+#include <QThread>
 
 namespace Ui {
 class CANUi;
@@ -22,6 +23,11 @@ public:
 
     static CANUi *getS_Instance();
 
+    void CANopenStart();
+    void CANopenStop();
+
+    void mReadResultNetworkDict(CO_Data *d, unsigned char nodeId);
+
 private slots:
     void on_pushButton_Open_clicked();
 
@@ -31,14 +37,39 @@ private slots:
 
     void messageShow(const QString &s);
 
+    void messageShow(const QCanBusFrame &frame);
+
     void on_pushButton_Send_clicked();
+
+    void on_pushButton_setNodeState_clicked();
+
+    void on_pushButton_getNodeState_clicked();
+
+    void on_Checkb_CANopen_stateChanged(int arg1);
+
+    void on_pushButton_guardSet_clicked();
+
+    void on_checkBox_sync_toggled(bool checked);
+
+    void on_checkBox_pdoReceive_toggled(bool checked);
+
+    void on_pushButton_dicSet_clicked();
+
+    void on_pushButton_dicRead_clicked();
+
+    void on_pushButton_sdoSet_clicked();
+
+    void on_pushButton_ClearAll_clicked();
+
+    void on_pushButton_sdoRead_clicked();
 
 private:
     Ui::CANUi *ui;
     static CANUi *s_Instance;
     s_BOARD *m_masterBoard;
-    CO_Data *m_masterData;
     CanThread *m_canThread;
+    bool m_CANState;
+    bool m_CANopenState;
 
 private:
     void initData();
@@ -46,6 +77,23 @@ private:
     void initThread();
     void initConnect();
 
+};
+
+
+class NMTThread : public QThread
+{
+    Q_OBJECT
+    void run() Q_DECL_OVERRIDE;
+public:
+
+    void doPollingState(UNS8 id, int ms);
+
+private:
+    UNS8 node_id;
+    int timeout_ms;
+
+signals:
+    void resultReady(const QString &s);
 };
 
 #endif // CANUI_H

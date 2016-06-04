@@ -51,118 +51,56 @@ QPushButton:disabled{
 QCheckBox{
 	font-size: 14px;
 	alignment:center}
+
+
 QRadioButton{
 	font-size: 14px;
 	alignment:center}
+
+    /*RadioButton样式设置*/
+    QRadioButton::indicator { 
+    	width: 17px;
+    	height: 17px;
+    }
+    /*单选框未选中样式*/
+    QRadioButton::indicator::unchecked {
+    	
+    	image: url(:/images/skin/images/radiob-unchecked.png);
+    }
+    /*单选框选中样式*/
+    QRadioButton::indicator::checked { 
+    	image: url(:/images/skin/images/radiob-checked.png);
+    }
+    /*RadioButton和checkbox字体和间距设置*/
+    QRadioButton ,QCheckBox{
+    	spacing: 5px;
+    	font-size: 14px;
+    }
+    /*checkbox样式设置*/
+    QCheckBox::indicator { 
+    	width: 26px;
+    	height: 50px;
+    }
+    /*未选中*/
+    QCheckBox::indicator::unchecked {	
+    	image: url(:/images/skin/images/checkb-unche.png);
+    }
+    /*选中*/
+    QCheckBox::indicator::checked { 
+    	image: url(:/images/skin/images/checkb_check.png);
+    }
 
 </string>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="1" column="4">
-      <widget class="QPushButton" name="plotPauseBtn0_2">
-       <property name="minimumSize">
-        <size>
-         <width>80</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>写入</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="4">
-      <widget class="QPushButton" name="plotPauseBtn0">
-       <property name="minimumSize">
-        <size>
-         <width>80</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>开始</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2" rowspan="3">
-      <widget class="QGroupBox" name="groupBox_5">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="title">
-        <string>Id</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_5">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_12">
-          <property name="text">
-           <string>P</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QDoubleSpinBox" name="SpinBox_idPRW">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>25</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>25</height>
-           </size>
-          </property>
-          <property name="maximum">
-           <double>99999.990000000005239</double>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_13">
-          <property name="text">
-           <string>I</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QDoubleSpinBox" name="SpinBox_idIRW">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>25</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>25</height>
-           </size>
-          </property>
-          <property name="maximum">
-           <double>99999.990000000005239</double>
-          </property>
-         </widget>
-        </item>
-       </layout>
-       <zorder>SpinBox_idPRW</zorder>
-       <zorder>label_13</zorder>
-       <zorder>SpinBox_idIRW</zorder>
-       <zorder>label_12</zorder>
-      </widget>
-     </item>
      <item row="0" column="0" rowspan="3">
       <widget class="QGroupBox" name="groupBox_2">
        <property name="maximumSize">
         <size>
          <width>16777215</width>
-         <height>120</height>
+         <height>888888</height>
         </size>
        </property>
        <property name="title">
@@ -258,6 +196,77 @@ QRadioButton{
        <zorder>SpinBox_speedIRW</zorder>
       </widget>
      </item>
+     <item row="0" column="2" rowspan="3">
+      <widget class="QGroupBox" name="groupBox_5">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="title">
+        <string>Id</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_12">
+          <property name="text">
+           <string>P</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QDoubleSpinBox" name="SpinBox_idPRW">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximum">
+           <double>99999.990000000005239</double>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_13">
+          <property name="text">
+           <string>I</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QDoubleSpinBox" name="SpinBox_idIRW">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximum">
+           <double>99999.990000000005239</double>
+          </property>
+         </widget>
+        </item>
+       </layout>
+       <zorder>SpinBox_idPRW</zorder>
+       <zorder>label_13</zorder>
+       <zorder>SpinBox_idIRW</zorder>
+       <zorder>label_12</zorder>
+      </widget>
+     </item>
      <item row="0" column="3" rowspan="3">
       <widget class="QGroupBox" name="groupBox_6">
        <property name="sizePolicy">
@@ -327,6 +336,64 @@ QRadioButton{
        <zorder>label_15</zorder>
        <zorder>SpinBox_iqIRW</zorder>
        <zorder>label_14</zorder>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <widget class="QCheckBox" name="checkBox_4">
+       <property name="text">
+        <string>开启</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="4">
+      <widget class="QPushButton" name="plotPauseBtn0_3">
+       <property name="minimumSize">
+        <size>
+         <width>80</width>
+         <height>35</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+    background-color: rgb(76, 218, 100);
+	border-style: outset;
+    border-width: 2px;
+	border-radius: 6px;
+    color: white;
+	font-size: 14px;
+}
+
+QPushButton:hover{
+    background-color: rgb(110, 230, 120);
+}
+
+QPushButton:pressed{
+    background-color: rgb(50, 200, 80);
+}
+
+QPushButton:disabled{
+    background-color: gray;
+}</string>
+       </property>
+       <property name="text">
+        <string>读取</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="4">
+      <widget class="QPushButton" name="plotPauseBtn0_2">
+       <property name="minimumSize">
+        <size>
+         <width>80</width>
+         <height>35</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>写入</string>
+       </property>
       </widget>
      </item>
      <item row="3" column="0" colspan="5">
@@ -402,8 +469,30 @@ QRadioButton{
             <property name="minimumSize">
              <size>
               <width>80</width>
-              <height>25</height>
+              <height>35</height>
              </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton{
+    background-color: rgb(76, 218, 100);
+	border-style: outset;
+    border-width: 2px;
+	border-radius: 6px;
+    color: white;
+	font-size: 14px;
+}
+
+QPushButton:hover{
+    background-color: rgb(110, 230, 120);
+}
+
+QPushButton:pressed{
+    background-color: rgb(50, 200, 80);
+}
+
+QPushButton:disabled{
+    background-color: gray;
+}</string>
             </property>
             <property name="text">
              <string>打开</string>
@@ -415,7 +504,7 @@ QRadioButton{
             <property name="minimumSize">
              <size>
               <width>80</width>
-              <height>25</height>
+              <height>35</height>
              </size>
             </property>
             <property name="text">
@@ -501,8 +590,30 @@ QRadioButton{
             <property name="minimumSize">
              <size>
               <width>80</width>
-              <height>25</height>
+              <height>35</height>
              </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton{
+    background-color: rgb(76, 218, 100);
+	border-style: outset;
+    border-width: 2px;
+	border-radius: 6px;
+    color: white;
+	font-size: 14px;
+}
+
+QPushButton:hover{
+    background-color: rgb(110, 230, 120);
+}
+
+QPushButton:pressed{
+    background-color: rgb(50, 200, 80);
+}
+
+QPushButton:disabled{
+    background-color: gray;
+}</string>
             </property>
             <property name="text">
              <string>打开</string>
@@ -514,7 +625,7 @@ QRadioButton{
             <property name="minimumSize">
              <size>
               <width>80</width>
-              <height>25</height>
+              <height>35</height>
              </size>
             </property>
             <property name="text">
@@ -525,19 +636,6 @@ QRadioButton{
          </layout>
         </item>
        </layout>
-      </widget>
-     </item>
-     <item row="0" column="4">
-      <widget class="QPushButton" name="plotPauseBtn0_3">
-       <property name="minimumSize">
-        <size>
-         <width>80</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>读取</string>
-       </property>
       </widget>
      </item>
      <item row="5" column="0" colspan="5">
@@ -613,8 +711,30 @@ QRadioButton{
             <property name="minimumSize">
              <size>
               <width>80</width>
-              <height>25</height>
+              <height>35</height>
              </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton{
+    background-color: rgb(76, 218, 100);
+	border-style: outset;
+    border-width: 2px;
+	border-radius: 6px;
+    color: white;
+	font-size: 14px;
+}
+
+QPushButton:hover{
+    background-color: rgb(110, 230, 120);
+}
+
+QPushButton:pressed{
+    background-color: rgb(50, 200, 80);
+}
+
+QPushButton:disabled{
+    background-color: gray;
+}</string>
             </property>
             <property name="text">
              <string>打开</string>
@@ -626,7 +746,7 @@ QRadioButton{
             <property name="minimumSize">
              <size>
               <width>80</width>
-              <height>25</height>
+              <height>35</height>
              </size>
             </property>
             <property name="text">

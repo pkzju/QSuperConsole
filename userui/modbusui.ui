@@ -41,7 +41,49 @@ QPushButton:pressed{
 
 QPushButton:disabled{
     background-color: gray;
-}</string>
+}
+
+QCheckBox{
+	font-size: 14px;
+	alignment:center}
+
+
+QRadioButton{
+	font-size: 14px;
+	alignment:center}
+
+    /*RadioButton样式设置*/
+    QRadioButton::indicator { 
+    	width: 17px;
+    	height: 17px;
+    }
+    /*单选框未选中样式*/
+    QRadioButton::indicator::unchecked {
+    	
+    	image: url(:/images/skin/images/radiob-unchecked.png);
+    }
+    /*单选框选中样式*/
+    QRadioButton::indicator::checked { 
+    	image: url(:/images/skin/images/radiob-checked.png);
+    }
+    /*RadioButton和checkbox字体和间距设置*/
+    QRadioButton ,QCheckBox{
+    	spacing: 5px;
+    	font-size: 14px;
+    }
+    /*checkbox样式设置*/
+    QCheckBox::indicator { 
+    	width: 26px;
+    	height: 50px;
+    }
+    /*未选中*/
+    QCheckBox::indicator::unchecked {	
+    	image: url(:/images/skin/images/checkb-unche.png);
+    }
+    /*选中*/
+    QCheckBox::indicator::checked { 
+    	image: url(:/images/skin/images/checkb_check.png);
+    }</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
@@ -228,7 +270,26 @@ QPushButton:disabled{
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true"/>
+           <string notr="true">QPushButton{
+    background-color: rgb(76, 218, 100);
+	border-style: outset;
+    border-width: 2px;
+	border-radius: 6px;
+    color: white;
+	font-size: 14px;
+}
+
+QPushButton:hover{
+    background-color: rgb(110, 230, 120);
+}
+
+QPushButton:pressed{
+    background-color: rgb(50, 200, 80);
+}
+
+QPushButton:disabled{
+    background-color: gray;
+}</string>
           </property>
           <property name="text">
            <string>   搜索串口   </string>
@@ -977,6 +1038,28 @@ QPushButton:disabled{
          <height>35</height>
         </size>
        </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+    background-color: rgb(76, 218, 100);
+	border-style: outset;
+    border-width: 2px;
+	border-radius: 6px;
+    color: white;
+	font-size: 14px;
+}
+
+QPushButton:hover{
+    background-color: rgb(110, 230, 120);
+}
+
+QPushButton:pressed{
+    background-color: rgb(50, 200, 80);
+}
+
+QPushButton:disabled{
+    background-color: gray;
+}</string>
+       </property>
        <property name="text">
         <string> Read </string>
        </property>
@@ -1014,8 +1097,6 @@ QPushButton:disabled{
     </layout>
    </item>
   </layout>
-  <zorder>groupBox</zorder>
-  <zorder>writeGroupBox</zorder>
  </widget>
  <resources/>
  <connections/>

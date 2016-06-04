@@ -1,3 +1,15 @@
+/****************************************************************************
+**
+** Copyright (C) 2016 pkzju
+**
+**
+** Version	: 0.1.1.0
+** Author	: pkzju
+** Website	: https://github.com/pkzju
+** Project	: https://github.com/pkzju/QSuperConsole
+** 
+****************************************************************************/
+
 /*
 This file is part of CanFestival, a library implementing CanOpen Stack.
 
@@ -133,6 +145,7 @@ do{char msg[300];\
   MSG(__VA_ARGS__);
 
 /// Definition of MSG_WAR
+//#define DEBUG_WAR_CONSOLE_ON
 // ---------------------
 #ifdef DEBUG_WAR_CONSOLE_ON
     #define MSG_WAR(num, str, val) CANFESTIVAL_DEBUG_MSG(num, str, val)
@@ -141,6 +154,7 @@ do{char msg[300];\
 #endif
 
 /// Definition of MSG_ERR
+#define DEBUG_ERR_CONSOLE_ON
 // ---------------------
 #ifdef DEBUG_ERR_CONSOLE_ON
 #    define MSG_ERR(num, str, val) CANFESTIVAL_DEBUG_MSG(num, str, val)

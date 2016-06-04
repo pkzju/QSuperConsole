@@ -5,7 +5,8 @@ FORMS += \
     $$PWD/mplotui.ui \
     $$PWD/homewindow.ui \
     $$PWD/modbusui.ui \
-    $$PWD/fanmotorui.ui
+    $$PWD/fanmotorui.ui \
+    $$PWD/qcanopen.ui
 
 
 HEADERS += \
@@ -16,7 +17,8 @@ HEADERS += \
     $$PWD/homewindow.h \
     $$PWD/modbusui.h \
     $$PWD/writeregistermodel.h \
-    $$PWD/fanmotorui.h
+    $$PWD/fanmotorui.h \
+    $$PWD/qcanopen.h
 
 
 SOURCES += \
@@ -27,5 +29,6 @@ SOURCES += \
     $$PWD/homewindow.cpp \
     $$PWD/modbusui.cpp \
     $$PWD/writeregistermodel.cpp \
-    $$PWD/fanmotorui.cpp
+    $$PWD/fanmotorui.cpp \
+    $$PWD/qcanopen.cpp
 

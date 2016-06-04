@@ -1,11 +1,15 @@
 #ifndef CANTHREAD_H
 #define CANTHREAD_H
 
-#include <QThread>
+
 #include <QMutex>
 #include <QMutexLocker>
 #include <QWaitCondition>
 
+#include <QCanBusFrame>
+#include "canopen/canfestival.h"
+
+#include <QThread>
 
 class CanThread : public QThread
 {
@@ -21,6 +25,7 @@ public:
 
 signals:
     void message(const QString &s);
+    void message(const QCanBusFrame &frame);
 
 private:
     static CanThread* s_instance;

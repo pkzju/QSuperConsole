@@ -12,9 +12,9 @@
 #define MAX_NB_CAN_PORTS 16
 
 
-
 CANPort canports[MAX_NB_CAN_PORTS] = {{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,}};
 
+HANDLE ghMutex;
 
 /***************************************************************************/
 UNS8 usbCanReceive(void* inst, Message *m)
@@ -22,7 +22,13 @@ UNS8 usbCanReceive(void* inst, Message *m)
     UNS8 ret;
     VCI_CAN_OBJ vco = {0};
     VCI_ERR_INFO errinfo;
-    ret = (UNS8)VCI_Receive(VCI_USBCAN2, 0, 0, &vco, 1, 1000);
+    DWORD dwWaitResult;
+    dwWaitResult = WaitForSingleObject(ghMutex, 100);
+    if(dwWaitResult == WAIT_OBJECT_0){
+        ret = (UNS8)VCI_Receive(VCI_USBCAN2, 0, 0, &vco, 1, 100);
+        ReleaseMutex(ghMutex);
+    }
+
     if(ret > 0)
     {
         m->cob_id = vco.ID;
@@ -34,14 +40,19 @@ UNS8 usbCanReceive(void* inst, Message *m)
     }
     else
     {
-        VCI_ReadErrInfo(VCI_USBCAN2, 0, 1,&errinfo);
+        dwWaitResult = WaitForSingleObject(ghMutex, 100);
+        if(dwWaitResult == WAIT_OBJECT_0){
+            VCI_ReadErrInfo(VCI_USBCAN2, 0, 1,&errinfo);
+            ReleaseMutex(ghMutex);
+        }
+
     }
     return ret;
 }
 
 UNS8 usbCanSend(void* inst, const Message *m)
 {
-    ULONG ret;
+    UNS8 ret;
     VCI_CAN_OBJ pSend;
     pSend.ID = m->cob_id;
     pSend.RemoteFlag = m->rtr;
@@ -50,7 +61,22 @@ UNS8 usbCanSend(void* inst, const Message *m)
     for (int i = 0 ; i < m->len ; i++) {
        pSend.Data[i] = m->data[i];
     }
-    ret = VCI_Transmit(VCI_USBCAN2,0,1,&pSend,1);
+
+    DWORD dwWaitResult;
+    dwWaitResult = WaitForSingleObject(ghMutex, 100);
+    if(dwWaitResult == WAIT_OBJECT_0){
+        ret = VCI_Transmit(VCI_USBCAN2,0,0,&pSend,1);
+        ReleaseMutex(ghMutex);
+    }
+
+
+
+    if(ret != 0)
+    {
+        ret = 0;
+    }
+    else
+        ret = 1;
 
     return (UNS8)ret;
 }
@@ -71,6 +97,8 @@ CAN_HANDLE usbCanOpen(s_BOARD *board)
     init_config1.Mode = 0;    //normel mode
     init_config1.Timing0 = 0x03;
     init_config1.Timing1 = 0x1c; //baud rate set 125kbps
+
+
 
     if(VCI_OpenDevice(VCI_USBCAN2,0,0) != STATUS_OK)
     {
@@ -100,7 +128,9 @@ CAN_HANDLE usbCanOpen(s_BOARD *board)
 int usbCanClose(s_BOARD *board)
 {
     int ret;
+
     ret = VCI_ResetCAN(VCI_USBCAN2, 0, 0);
+
     if(ret)
         return VCI_CloseDevice(VCI_USBCAN2,0);
     else
@@ -146,6 +176,12 @@ CAN_PORT canOpen(s_BOARD *board, CO_Data *d)
 	int i;
 	CAN_HANDLE fd0;
 
+    if(!ghMutex)
+        ghMutex = CreateMutex(
+        NULL,              // default security attributes
+        FALSE,             // initially not owned
+        NULL);
+
 	if(d->canHandle)
 	{
 	  canClose(d);
@@ -157,19 +193,22 @@ CAN_PORT canOpen(s_BOARD *board, CO_Data *d)
 		break;
 	}
 
+
+
     fd0 = usbCanOpen(board);
+
+
+
 	if(fd0)
     {
 		canports[i].used = 1;
 		canports[i].fd = fd0;
 		canports[i].d = d;
 		d->canHandle = (CAN_PORT)&canports[i];
-     //   CreateReceiveTask(&(canports[i]), &canports[i].receiveTask, (void *)canReceiveLoop);
 		return (CAN_PORT)&canports[i];
 	}
 	else
 	{
-//		MSG("CanOpen : Cannot open board {busname='%S',baudrate='%S'}\n",board->busname, board->baudrate);
 		return NULL;
 	}
 }
@@ -184,8 +223,6 @@ int canClose(CO_Data * d)
 
         res = usbCanClose((port->fd));
 
-        WaitReceiveTaskEnd(&port->receiveTask);
-
         d->canHandle = NULL;
     }
 
@@ -196,13 +233,11 @@ UNS8 canChangeBaudRate(CAN_PORT port, char* baud)
 {
    if(port){
 		UNS8 res;
-        LeaveMutex();
+
         res = usbCanChangeBaudrate(((CANPort*)port)->fd, baud);
-        EnterMutex();
 		return res; // OK
 	}
 	return 1; // NOT OK
 }
-
 
 

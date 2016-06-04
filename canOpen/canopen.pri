@@ -23,7 +23,7 @@ HEADERS += \
     $$PWD/timerscfg.h \
     $$PWD/ControlCAN.H \
     $$PWD/config.h \
-    $$PWD/win32test.h
+    $$PWD/master.h
 
 SOURCES += \
     $$PWD/canfestival.c \
@@ -40,7 +40,7 @@ SOURCES += \
     $$PWD/sync.c \
     $$PWD/timer.c \
     $$PWD/timers_win32.c \
-    $$PWD/win32test.c
+    $$PWD/master.c
 
 
 DISTFILES +=

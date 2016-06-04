@@ -101,6 +101,7 @@ void startSYNC(CO_Data* d)
 				&SyncAlarm,
 				US_TO_TIMEVAL(*d->Sync_Cycle_Period), 
 				US_TO_TIMEVAL(*d->Sync_Cycle_Period));
+
 	}
 }
 

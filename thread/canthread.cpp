@@ -1,12 +1,14 @@
 #include "canthread.h"
-#include "canopen/canfestival.h"
+#include <QDebug>
+
+//Q_DECLARE_METATYPE(QCanBusFrame)
 
 CanThread *CanThread::s_instance = 0;
 
 CanThread::CanThread(QObject *parent)
     : QThread(parent)
 {
-
+    qRegisterMetaType<QCanBusFrame>("QCanBusFrame");
 }
 
 CanThread::~CanThread()
@@ -50,25 +52,33 @@ void CanThread::run()
 
     qDebug("thread running");
 
-    Message *m = new Message();
+    Message m{0};
+    QCanBusFrame frame;
+    QByteArray payload;
     while(!isStopped)
     {
         int ret=0;
-        ret = usbCanReceive(0, m);
+
+        ret = usbCanReceive(0, &m);
+
         if(ret>0){
-            QString str = QString("receive data: id:%1 len:%2 "
-                                  "data:%3 %4 %5 %6 %7 %8 %9 %10")
-                    .arg(m->cob_id).arg(m->len)
-                    .arg(m->data[0]).arg(m->data[1]).arg(m->data[2]).arg(m->data[3])
-                    .arg(m->data[4]).arg(m->data[5]).arg(m->data[6]).arg(m->data[7]);
-            message(str);
+
+            canDispatch(&master_Data, &m);
+
+            frame.setFrameId(m.cob_id);
+
+            payload.clear();
+            for(quint8 i = 0 ; i < m.len ; i++){
+                payload.append(m.data[i]);
+            }
+            frame.setPayload(payload);
+            message(frame);
         }
 
         m_canMutex.lock();
         isStopped = m_isStopped;
         m_canMutex.unlock();
     }
-    delete m;
 
     qDebug("thread exit");
 }

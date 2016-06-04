@@ -11,8 +11,8 @@ MPlotUi::MPlotUi(QWidget *parent) :
 {
     ui->setupUi(this);
     setupRealtimeDataDemo(ui->customPlot);
-    //    setupRealtimeDataDemo(ui->customPlot2);
-    //    setupRealtimeDataDemo(ui->customPlot3);
+        setupRealtimeDataDemo(ui->customPlot2);
+        setupRealtimeDataDemo(ui->customPlot3);
 }
 
 MPlotUi::~MPlotUi()
@@ -46,7 +46,7 @@ void MPlotUi::setupRealtimeDataDemo(QCustomPlot *customPlot)
 
     customPlot->addGraph(); // blue line
     customPlot->graph(0)->setPen(QPen(Qt::blue));
-    customPlot->graph(0)->setName("graph1^*^");
+//    customPlot->graph(0)->setName("graph1^*^");
     customPlot->addGraph(); // red line
     customPlot->graph(1)->setPen(QPen(Qt::red));
     customPlot->addGraph(); // green line

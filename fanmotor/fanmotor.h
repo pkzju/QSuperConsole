@@ -1,4 +1,4 @@
-﻿#ifndef FANMOTOR_H
+#ifndef FANMOTOR_H
 #define FANMOTOR_H
 
 typedef signed char qint8;         // 8 bit signed
@@ -101,12 +101,12 @@ struct FanPIController{
 #pragma pack(push)
 #pragma pack(1)
 struct FanMotorController{
-    quint16 m_ratedPower;     // 额定功率    address:0x0060
-    quint16 m_ratedSpeed;     // 额定转速
+    quint16 m_ratedPower;     //     address:0x0060
+    quint16 m_ratedSpeed;     //
 
-    quint16 m_targetpower;    // 实时目标功率  address:0x0062
-    quint16 m_nowpower;       // 实时实际功率  address:0x0063
-    qint16 m_speedRef;        //                     0x0064
+    quint16 m_targetpower;    //   address:0x0062
+    quint16 m_nowpower;       //   address:0x0063
+    qint16 m_speedRef;        //            0x0064
     qint16 m_speedFbk;
 
     FanMotorState m_runState;	  // Motor run state

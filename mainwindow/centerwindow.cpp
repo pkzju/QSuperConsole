@@ -41,18 +41,16 @@ void CenterWindow::initUI()
 {
     qssBuilder = new QssBuilder;
     CANUi *canUi = CANUi::getS_Instance();
-    SerialPortUi *serialportsettingsdialog = new SerialPortUi;
+    SerialPortUi *serialport = new SerialPortUi;
     MPlotUi *plotUi = MPlotUi::getInstance();
-    FTabWidget *Com = new FTabWidget;
     ModbusUi *modbusui = ModbusUi::getInstance();
     FanMotorUi *fanmotorui = new FanMotorUi;
-//    Com->addWidget(QStringLiteral("CAN"),"canBtn",canUi);
-    Com->addWidget(QStringLiteral("串口"),"serialportBtn",serialportsettingsdialog);
 
-    addWidget(QStringLiteral("Canbus"),"Communication", canUi);
     addWidget(QStringLiteral("Home"), "Home", fanmotorui);
     addWidget(QStringLiteral("Scope"), "MathPlot", plotUi);
+    addWidget(QStringLiteral("Canbus"),"Communication", canUi);
     addWidget(QStringLiteral("Modbus"),"Communication", modbusui);
+    addWidget(QStringLiteral("COMPort"),"serialportBtn",serialport);
 
 
     setAlignment(TopCenter);

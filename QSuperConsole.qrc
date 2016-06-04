@@ -32,6 +32,11 @@
         <file>skin/icons/led_off.png</file>
         <file>skin/icons/led_on.png</file>
         <file>skin/icons/led_warning.png</file>
+        <file>skin/images/checkb_check.png</file>
+        <file>skin/images/checkb-unche.png</file>
+        <file>skin/images/radiob-checked.png</file>
+        <file>skin/images/radiob-unchecked.png</file>
+        <file>skin/images/csm_seminars.png</file>
     </qresource>
     <qresource prefix="/qss">
         <file>skin/qss/BB.qss</file>

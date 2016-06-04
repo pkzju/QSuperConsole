@@ -52,12 +52,12 @@ static TimerCallback_t init_callback;
 
 void EnterMutex(void)
 {
-	EnterCriticalSection(&CanFestival_mutex);
+    EnterCriticalSection(&CanFestival_mutex);
 }
 
 void LeaveMutex(void)
 {
-	LeaveCriticalSection(&CanFestival_mutex);
+    LeaveCriticalSection(&CanFestival_mutex);
 }
 
 // --------------- CAN Receive Thread Implementation ---------------
@@ -90,10 +90,10 @@ DWORD TimerThreadLoop(LPVOID arg)
 		WaitForSingleObject(timer, INFINITE);
 		if(stop_timer)
 			break;
-		EnterMutex();
+        EnterMutex();
 		timebuffer = GetTickCount();
 		TimeDispatch();
-		LeaveMutex();
+        LeaveMutex();
 	}
 	return 0;
 }
@@ -122,18 +122,21 @@ void TimerCleanup(void)
 
 void StopTimerLoop(TimerCallback_t exitfunction)
 {
-	EnterMutex();
-	exitfunction(NULL,0);
-	LeaveMutex();
+    if(timer_thread){
+        EnterMutex();
+        exitfunction(NULL,0);
+        LeaveMutex();
 
-	stop_timer = 1;
-	setTimer(0);
-	if(WaitForSingleObject(timer_thread,1000) == WAIT_TIMEOUT)
-	{
-		TerminateThread(timer_thread, -1);
-	}
-	CloseHandle(timer);
-	CloseHandle(timer_thread);
+        stop_timer = 1;
+        setTimer(0);
+        if(WaitForSingleObject(timer_thread,1000) == WAIT_TIMEOUT)
+        {
+            TerminateThread(timer_thread, -1);
+        }
+        CloseHandle(timer);
+        CloseHandle(timer_thread);
+        timer_thread = NULL;
+    }
 }
 
 void StartTimerLoop(TimerCallback_t _init_callback)
@@ -145,7 +148,8 @@ void StartTimerLoop(TimerCallback_t _init_callback)
 		// At first, TimeDispatch will call init_callback.
 	SetAlarm(NULL, 0, init_callback, 0, 0);
 	LeaveMutex();
-	timer_thread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)TimerThreadLoop, NULL, 0, &timer_thread_id);
+    if(!timer_thread)
+        timer_thread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)TimerThreadLoop, NULL, 0, &timer_thread_id);
 }
 
 /* Set the next alarm */

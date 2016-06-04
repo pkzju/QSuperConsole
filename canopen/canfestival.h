@@ -1,3 +1,15 @@
+/****************************************************************************
+**
+** Copyright (C) 2016 pkzju
+**
+**
+** Version	: 0.1.1.0
+** Author	: pkzju
+** Website	: https://github.com/pkzju
+** Project	: https://github.com/pkzju/QSuperConsole
+** 
+****************************************************************************/
+
 #ifndef __canfestival_h__
 #define __canfestival_h__
 #ifdef __cplusplus
@@ -5,9 +17,10 @@ extern "C" {
 #endif
 #include "ControlCAN.H"
 #include "canopen/can_driver.h"
+#include "canopen/timers_driver.h"
 #include "timerscfg.h"
 #include "canopen/data.h"
-
+#include "master.h"
 
 
 /* CAN port structure */
@@ -18,6 +31,7 @@ canpport{
   TASK_HANDLE receiveTask; /**< CAN Receiver task*/
   CO_Data* d; /**< CAN object data*/
 }CANPort;
+
 
 UNS8 usbCanReceive(void* inst, Message *m);
 UNS8 usbCanSend(void* inst, const Message *m);

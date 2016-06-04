@@ -262,7 +262,7 @@ void ModbusUi::fillPortsParameters()
     ui->baudCombo->addItem(QStringLiteral("38400"), QSerialPort::Baud38400);
     ui->baudCombo->addItem(QStringLiteral("115200"), QSerialPort::Baud115200);
     ui->baudCombo->addItem(tr("Custom"));
-    ui->baudCombo->setCurrentIndex(1);
+    ui->baudCombo->setCurrentIndex(0);
 
     ui->dataBitsCombo->addItem(QStringLiteral("5"), QSerialPort::Data5);
     ui->dataBitsCombo->addItem(QStringLiteral("6"), QSerialPort::Data6);
@@ -275,7 +275,7 @@ void ModbusUi::fillPortsParameters()
     ui->parityCombo->addItem(tr("Odd"), QSerialPort::OddParity);
     ui->parityCombo->addItem(tr("Mark"), QSerialPort::MarkParity);
     ui->parityCombo->addItem(tr("Space"), QSerialPort::SpaceParity);
-    ui->parityCombo->setCurrentIndex(1);
+    ui->parityCombo->setCurrentIndex(0);
 
     ui->stopBitsCombo->addItem(QStringLiteral("1"), QSerialPort::OneStop);
 #ifdef Q_OS_WIN
