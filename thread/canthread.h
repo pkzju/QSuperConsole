@@ -19,7 +19,7 @@ public:
     CanThread(QObject *parent = 0);
     ~CanThread();
     static CanThread* getInstance();
-    void mStart();
+    void mStart(bool isCANopen);
     void mStop();
     void run();
 
@@ -31,6 +31,7 @@ private:
     static CanThread* s_instance;
     QMutex m_canMutex;
     bool m_isStopped;
+    bool m_isCANopenOpened;
 
 };
 

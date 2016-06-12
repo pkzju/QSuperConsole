@@ -11,6 +11,9 @@ extern CO_Data master_Data;
 CANUi *CANUi::s_Instance = 0;
 
 
+
+
+
 void NMTThread::run()
 {
     QString result;
@@ -79,7 +82,7 @@ void InitNodes(CO_Data* d, UNS32 id)
 }
 void Exit(CO_Data* d, UNS32 id)
 {
-    masterSendNMTstateChange (&master_Data, 0x01, NMT_Stop_Node);
+//    masterSendNMTstateChange (&master_Data, 0x01, NMT_Stop_Node);
     setState(&master_Data, Stopped);
 }
 void CANUi::CANopenStart(){
@@ -98,6 +101,12 @@ void CANUi::CANopenStop(){
     }
 }
 
+void CANUi::resetCAN()
+{
+    if(ui->pushButton_Close->isEnabled())
+        on_pushButton_Close_clicked();
+}
+
 CANUi::CANUi(QWidget *parent) :
     QFrame(parent),
     ui(new Ui::CANUi)
@@ -114,11 +123,9 @@ CANUi::CANUi(QWidget *parent) :
 void CANUi::initData()
 {
     m_masterBoard->busname = const_cast<char *>("master");
-    m_masterBoard->baudrate = const_cast<char *>("115200");
+    m_masterBoard->baudrate = const_cast<char *>("125000");
     m_CANopenState = false;
     m_CANState = false;
-
-
 
     {
         UNS32 _destData = 0;
@@ -136,6 +143,8 @@ void CANUi::initData()
 
 void CANUi::initUI()
 {
+    ui->pushButton_Send->setEnabled(false);
+
     ui->pushButton_Close->setEnabled(false);
     ui->Checkb_CANopen->setEnabled(false);
 
@@ -170,22 +179,13 @@ void CANUi::initThread()
 
 void CANUi::initConnect()
 {
-    connect(m_canThread, SIGNAL(message(QString)),
-            this, SLOT(messageShow(QString)));
 
-    connect(m_canThread, SIGNAL(message(QCanBusFrame)),
-            this, SLOT(messageShow(QCanBusFrame)));
 }
 
 CANUi::~CANUi()
 {
-    if(m_canThread)
-        m_canThread->mStop();
-
-    CANopenStop();
-
-    canClose(&master_Data);
-
+    if(ui->pushButton_Close->isEnabled())
+        on_pushButton_Close_clicked();
 
     delete ui;
 }
@@ -214,7 +214,14 @@ void CANUi::on_pushButton_Open_clicked()
 
     m_CANState = true;
     ui->textBrowser->append("open success !");
-    m_canThread->mStart();
+
+    connect(m_canThread, SIGNAL(message(QString)),
+            this, SLOT(messageShow(QString)));
+
+    connect(m_canThread, SIGNAL(message(QCanBusFrame)),
+            this, SLOT(messageShow(QCanBusFrame)));
+
+    m_canThread->mStart(false);//open canport and close canopen
 
     ui->textBrowser->append(tr("ObjdictSize: %1").arg(*master_Data.ObjdictSize));
 
@@ -223,6 +230,7 @@ void CANUi::on_pushButton_Open_clicked()
     ui->pushButton_Close->setEnabled(true);
 
     ui->Checkb_CANopen->setEnabled(true);//canopen open
+    ui->pushButton_Send->setEnabled(true);
 
 
 }
@@ -230,17 +238,22 @@ void CANUi::on_pushButton_Open_clicked()
 void CANUi::on_pushButton_Close_clicked()
 {
     if(!m_CANState){
-        ui->textBrowser->append("already closed !");
         return;
     }
 
-    m_canThread->mStop();
-
-    if(canClose(&master_Data) < 0)
-    {
-        ui->textBrowser->append("close failed !");
-        return;
+    if(ui->Checkb_CANopen->isChecked()){//first
+        ui->Checkb_CANopen->click();    //close canopen
     }
+
+    m_canThread->mStop();               //then close thread
+    disconnect(m_canThread, SIGNAL(message(QString)),
+            this, SLOT(messageShow(QString)));
+
+    disconnect(m_canThread, SIGNAL(message(QCanBusFrame)),
+            this, SLOT(messageShow(QCanBusFrame)));
+
+    canClose(&master_Data);            //final close canport
+
 
     m_CANState = false;
     ui->textBrowser->append("close success !");
@@ -248,11 +261,10 @@ void CANUi::on_pushButton_Close_clicked()
     ui->pushButton_Close->setEnabled(false);
     ui->pushButton_Open->setEnabled(true);
 
-    if(ui->Checkb_CANopen->isChecked()){//canopen on?
-        ui->Checkb_CANopen->click();//canopen close
-    }
+
 
     ui->Checkb_CANopen->setEnabled(false);
+    ui->pushButton_Send->setEnabled(false);
 
 
 }
@@ -353,8 +365,9 @@ void CANUi::on_pushButton_getNodeState_clicked()
 
 void CANUi::on_Checkb_CANopen_stateChanged(int arg1)
 {
-    if(arg1){//checked
-        CANopenStart();
+    if(arg1){//if checked
+        m_canThread->mStart(true);//open canopen
+        CANopenStart();//init timer and status
 
         ui->pushButton_getNodeState->setEnabled(true);
         ui->pushButton_setNodeState->setEnabled(true);
@@ -364,6 +377,7 @@ void CANUi::on_Checkb_CANopen_stateChanged(int arg1)
         ui->pushButton_sdoSet->setEnabled(true);
     }
     else{
+        m_canThread->mStart(false);//close canopen but not canport
         ui->pushButton_getNodeState->setEnabled(false);
         ui->pushButton_setNodeState->setEnabled(false);
         ui->pushButton_guardSet->setEnabled(false);
@@ -371,7 +385,7 @@ void CANUi::on_Checkb_CANopen_stateChanged(int arg1)
         ui->pushButton_sdoRead->setEnabled(false);
         ui->pushButton_sdoSet->setEnabled(false);
 
-        CANopenStop();
+        CANopenStop();//close timer and set stop status
     }
 
 }
@@ -398,7 +412,7 @@ void CANUi::on_pushButton_guardSet_clicked()
             {//0x1016 :   Consumer Heartbeat Time  nodeid(bit 23 : 16) + time(bit 15 : 0) ms
                 UNS32 _sourceData = _time + (i << 16);
                 UNS32 _dataSize = sizeof(UNS32);
-                if(OD_SUCCESSFUL != writeLocalDict(&master_Data, (UNS16)0x1016, (UNS8)i, (UNS32*)&_sourceData, &_dataSize, 1 )){
+                if(OD_SUCCESSFUL != writeLocalDict(&master_Data, (UNS16)0x1016, (UNS8)i, (UNS32*)&_sourceData, &_dataSize, RW )){
                     ui->textBrowser->append(tr("writeLocalDict 0x1016 %1: fail !").arg(i));
                 }
             }
@@ -454,16 +468,16 @@ void CANUi::on_checkBox_pdoReceive_toggled(bool checked)
         {//0x1600 :   RPDO1 COB-ID 0x180 + nodeid
             UNS32 _sourceData = ui->spinBox_rpdoCOB->value() + ui->spinBox_pdonodeID->value();
             UNS32 _dataSize = sizeof(UNS32);
-            if(OD_SUCCESSFUL != writeLocalDict(&master_Data, (UNS16)0x1600, (UNS8)1, (UNS32*)&_sourceData, &_dataSize, 1 )){
-                ui->textBrowser->append("writeLocalDict 0x1600 fail !");
+            if(OD_SUCCESSFUL != writeLocalDict(&master_Data, (UNS16)0x1400, (UNS8)1, (UNS32*)&_sourceData, &_dataSize, 1 )){
+                ui->textBrowser->append("writeLocalDict 0x1400 fail !");
             }
         }
     }else{
         {//0x1600 :   RPDO1 COB-ID 0x180 + nodeid
             UNS32 _sourceData = 0;
             UNS32 _dataSize = sizeof(UNS32);
-            if(OD_SUCCESSFUL != writeLocalDict(&master_Data, (UNS16)0x1600, (UNS8)1, (UNS32*)&_sourceData, &_dataSize, 1 )){
-                ui->textBrowser->append("writeLocalDict 0x1600 fail !");
+            if(OD_SUCCESSFUL != writeLocalDict(&master_Data, (UNS16)0x1400, (UNS8)1, (UNS32*)&_sourceData, &_dataSize, 1 )){
+                ui->textBrowser->append("writeLocalDict 0x1400 fail !");
             }
         }
 

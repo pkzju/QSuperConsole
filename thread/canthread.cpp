@@ -26,10 +26,11 @@ CanThread* CanThread::getInstance()
     return s_instance;
 }
 
-void CanThread::mStart()
+void CanThread::mStart(bool isCANopen)
 {
     m_canMutex.lock();
     m_isStopped = false;
+    m_isCANopenOpened = isCANopen;
     m_canMutex.unlock();
 
     if (!this->isRunning())
@@ -40,14 +41,18 @@ void CanThread::mStop()
 {
     m_canMutex.lock();
     m_isStopped = true;
+    m_isCANopenOpened = false;
     m_canMutex.unlock();
 }
+
 
 void CanThread::run()
 {
     bool isStopped = true;
+    bool isCANopen = true;
     m_canMutex.lock();
     isStopped = m_isStopped;
+    isCANopen = m_isCANopenOpened;
     m_canMutex.unlock();
 
     qDebug("thread running");
@@ -63,7 +68,8 @@ void CanThread::run()
 
         if(ret>0){
 
-            canDispatch(&master_Data, &m);
+            if(isCANopen)
+                canDispatch(&master_Data, &m);
 
             frame.setFrameId(m.cob_id);
 
@@ -77,6 +83,7 @@ void CanThread::run()
 
         m_canMutex.lock();
         isStopped = m_isStopped;
+        isCANopen = m_isCANopenOpened;
         m_canMutex.unlock();
     }
 

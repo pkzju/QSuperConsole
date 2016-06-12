@@ -65,7 +65,7 @@ void QMotor::update()
         m_commLamp->setLampState(QcwIndicatorLamp::lamp_green);
     else if(m_communicationState == FanCommunicationState::m_disconnect)
         m_commLamp->setLampState(QcwIndicatorLamp::lamp_red);
-    else if(m_communicationState == FanCommunicationState::m_error)
+    else if(m_communicationState == FanCommunicationState::m_comError)
         m_commLamp->setLampState(QcwIndicatorLamp::lamp_yellow);
 
 }

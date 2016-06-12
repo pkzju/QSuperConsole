@@ -9,7 +9,7 @@ typedef int qint32;                // 32 bit signed
 typedef unsigned int quint32;      // 32 bit unsigned
 
 
-enum class FanMotorError : char{
+enum FanMotorError {
     m_noError = 0,
     m_overCur,
     m_overSpd,
@@ -18,26 +18,31 @@ enum class FanMotorError : char{
     m_highVolt
 };
 
-enum class FanMotorState : char{
+enum FanMotorState{
     m_stop = 0,
     m_error,
     m_run
 };
 
-enum class FanCommunicationState : char{
+enum FanCommunicationState{
     m_disconnect = 0,
     m_connect,
-    m_error
+    m_comError
 };
 
 
 const quint16 g_mSettingsRegisterAddress = 0x0040;
+const quint16 g_mSettingsRegisterCount = 13;
+
 const quint16 g_mControllerRegisterAddress = 0x0060;
-const int g_mRatedRegisterCount = 2;
+const quint16 g_mRatedRegisterCount = 2;
+
 const quint16 g_mRealTimeRegisterAddress = 0x0062;
-const int g_mRealTimeRegisterCount = 5;
-const int g_mRealTimeRegisterMoreCount = 9;
-const quint16 g_mPIParaRegisterAddress = 0x0060;
+const quint16 g_mRealTimeRegisterCount = 5;
+const quint16 g_mRealTimeRegisterMoreCount = 9;
+
+const quint16 g_mPIParaRegisterAddress = 0x0080;
+const quint16 g_mPIParaRegisterMoreCount = 3;
 /********************
  *
  *******************/
@@ -88,7 +93,7 @@ struct FanPIParameters{
 #pragma pack(push)
 #pragma pack(1)
 struct FanPIController{
-    FanPIParameters m_PI;     // PI parameters
+    struct FanPIParameters m_PI;     // PI parameters
     qint16  m_ref;   		// reference set-point
     qint16  m_fbk;   		// feedback
     qint16  m_out;   		// Output: controller output
@@ -101,16 +106,16 @@ struct FanPIController{
 #pragma pack(push)
 #pragma pack(1)
 struct FanMotorController{
-    quint16 m_ratedPower;     //     address:0x0060
-    quint16 m_ratedSpeed;     //
+    quint16 m_ratedPower;     // 额定功率    address:0x0060
+    quint16 m_ratedSpeed;     // 额定转速
 
-    quint16 m_targetpower;    //   address:0x0062
-    quint16 m_nowpower;       //   address:0x0063
-    qint16 m_speedRef;        //            0x0064
+    quint16 m_targetpower;    // 实时目标功率  address:0x0062
+    quint16 m_nowpower;       // 实时实际功率  address:0x0063
+    qint16 m_speedRef;        //                     0x0064
     qint16 m_speedFbk;
 
-    FanMotorState m_runState;	  // Motor run state
-    FanMotorError m_runError;	  // Motor run Error
+    enum FanMotorState m_runState;	  // Motor run state
+    enum FanMotorError m_runError;	  // Motor run Error
 
     qint16 m_idRef;
     qint16 m_idFbk;
@@ -128,10 +133,10 @@ struct FanMotorController{
 #pragma pack(push)
 #pragma pack(1)
 struct FanMotor{
-    FanMotorSettings m_initSetttings;     //0x0040
-    FanMotorController m_motorController; //0x0060
-    FanPIParameters m_PIPara;             //0x0080
-    FanCommunicationState m_communicationState;
+    struct FanMotorSettings m_initSetttings;     //0x0040
+    struct FanMotorController m_motorController; //0x0060
+    struct FanPIParameters m_PIPara;             //0x0080
+    enum FanCommunicationState m_communicationState;
 };
 #pragma pack(pop)
 

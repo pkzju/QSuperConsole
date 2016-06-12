@@ -34,7 +34,7 @@ private slots:
 
     void on_connectType_currentIndexChanged(int);
     void onStateChanged(int state);
-    void on_connectButton_clicked();
+
 
     void on_readButton_clicked();
     void readReady();
@@ -42,6 +42,9 @@ private slots:
     void on_writeButton_clicked();
     void on_readWriteButton_clicked();
     void on_writeTable_currentIndexChanged(int);
+
+public slots:
+    void on_connectButton_clicked();
 
 private:
     void fillPortsInfo();

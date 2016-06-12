@@ -9,6 +9,12 @@
 
 #include <QThread>
 
+
+void InitNodes(CO_Data* d, UNS32 id);
+
+void Exit(CO_Data* d, UNS32 id);
+
+
 namespace Ui {
 class CANUi;
 }
@@ -25,6 +31,8 @@ public:
 
     void CANopenStart();
     void CANopenStop();
+
+    void resetCAN();
 
     void mReadResultNetworkDict(CO_Data *d, unsigned char nodeId);
 

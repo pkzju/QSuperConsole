@@ -5,6 +5,7 @@
 #include "modbusui.h"
 #include <QModbusDataUnit>
 #include "fanmotor/fanmotor.h"
+#include "canui.h"
 
 QT_BEGIN_NAMESPACE
 class QModbusClient;
@@ -29,6 +30,13 @@ public:
     ~FanMotorUi();
 
 public:
+    enum Communication:char{
+        Init,
+        Tcp,
+        Modbus,
+        CANbus
+    };
+
     enum PollingState:char{
         Stop,
         SingleMotor,
@@ -37,9 +45,14 @@ public:
     };
 
 private slots:
+
+    void messageShow(const QString &s);
+
+    void messageHandle(const QCanBusFrame &frame);
+
     void pollingTimerUpdate();
 
-    void onStateChanged(int state);
+    void onModebusStateChanged(int state);
 
     void on_pushButton_read_clicked();
 
@@ -55,6 +68,20 @@ private slots:
 
     void on_spinBox_currentaddress_valueChanged(int arg1);
 
+    void on_connectButton_clicked();
+
+    void on_pushButton_startMotor_clicked();
+
+    void on_pushButton_stopMotor_clicked();
+
+    void on_disconnectButton_clicked();
+
+    void on_radioButton_modbus_clicked();
+
+    void on_radioButton_can_clicked();
+
+    void on_radioButton_tcp_clicked();
+
 private:
     QModbusDataUnit readRequest() const;
     QModbusDataUnit writeRequest() const;
@@ -65,6 +92,8 @@ signals:
 private:
     Ui::FanMotorUi *ui;
     ModbusUi *m_modbusUi;
+    CANUi *m_canUi;
+
     QModbusClient* modbusDevice;
     QVector<QMotor*> m_motors;
     QTimer *m_pollingTimer;
@@ -73,6 +102,10 @@ private:
     int m_startServerAddress;
     int m_motorNum;
     PollingState m_pollingState;
+    Communication m_communication;
+
+    s_BOARD *m_masterBoard;
+    CanThread *m_canThread;
 
     void sendOnePolling(int address);
 

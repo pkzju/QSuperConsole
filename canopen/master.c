@@ -6,9 +6,19 @@
 /**************************************************************************/
 /* Declaration of mapped variables                                        */
 /**************************************************************************/
-UNS8 motoRealtimeData[] =		/* Mapped at index 0x2000, subindex 0x01 - 0x10 */
+INTEGER16 motoRealtimeData[] =		/* Mapped at index 0x2000, subindex 0x01 - 0x08 */
   {
     0x0,	/* 0 */
+    0x0,	/* 0 */
+    0x0,	/* 0 */
+    0x0,	/* 0 */
+    0x0,	/* 0 */
+    0x0,	/* 0 */
+    0x0,	/* 0 */
+    0x0	/* 0 */
+  };
+INTEGER16 motorSettings[] =		/* Mapped at index 0x2001, subindex 0x01 - 0x0F */
+  {
     0x0,	/* 0 */
     0x0,	/* 0 */
     0x0,	/* 0 */
@@ -25,49 +35,8 @@ UNS8 motoRealtimeData[] =		/* Mapped at index 0x2000, subindex 0x01 - 0x10 */
     0x0,	/* 0 */
     0x0	/* 0 */
   };
-UNS8 motorSettings[] =		/* Mapped at index 0x2001, subindex 0x01 - 0x1A */
+INTEGER16 motorPara[] =		/* Mapped at index 0x2002, subindex 0x01 - 0x04 */
   {
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0	/* 0 */
-  };
-UNS8 motorPara[] =		/* Mapped at index 0x2002, subindex 0x01 - 0x10 */
-  {
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
-    0x0,	/* 0 */
     0x0,	/* 0 */
     0x0,	/* 0 */
     0x0,	/* 0 */
@@ -180,8 +149,8 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                     UNS8 master_highestSubIndex_obj1016 = 32; /* number of subindex - 1*/
                     UNS32 master_obj1016[] = 
                     {
-                      0,	/* 0 */
-                      0,	/* 0 */
+                      0x0,	/* 0 */
+                      0x0,	/* 0 */
                       0x0,	/* 0 */
                       0x0,	/* 0 */
                       0x0,	/* 0 */
@@ -319,22 +288,29 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                        { RW, uint8, sizeof (UNS8), (void*)&master_obj1401_SYNC_start_value }
                      };
 
+/* index 0x1402 :   Receive PDO 3 Parameter. */
+                    UNS8 master_highestSubIndex_obj1402 = 6; /* number of subindex - 1*/
+                    UNS32 master_obj1402_COB_ID_used_by_PDO = 0x400;	/* 1024 */
+                    UNS8 master_obj1402_Transmission_Type = 0x0;	/* 0 */
+                    UNS16 master_obj1402_Inhibit_Time = 0x0;	/* 0 */
+                    UNS8 master_obj1402_Compatibility_Entry = 0x0;	/* 0 */
+                    UNS16 master_obj1402_Event_Timer = 0x0;	/* 0 */
+                    UNS8 master_obj1402_SYNC_start_value = 0x0;	/* 0 */
+                    subindex master_Index1402[] = 
+                     {
+                       { RO, uint8, sizeof (UNS8), (void*)&master_highestSubIndex_obj1402 },
+                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1402_COB_ID_used_by_PDO },
+                       { RW, uint8, sizeof (UNS8), (void*)&master_obj1402_Transmission_Type },
+                       { RW, uint16, sizeof (UNS16), (void*)&master_obj1402_Inhibit_Time },
+                       { RW, uint8, sizeof (UNS8), (void*)&master_obj1402_Compatibility_Entry },
+                       { RW, uint16, sizeof (UNS16), (void*)&master_obj1402_Event_Timer },
+                       { RW, uint8, sizeof (UNS8), (void*)&master_obj1402_SYNC_start_value }
+                     };
+
 /* index 0x1600 :   Receive PDO 1 Mapping. */
-                    UNS8 master_highestSubIndex_obj1600 = 16; /* number of subindex - 1*/
+                    UNS8 master_highestSubIndex_obj1600 = 4; /* number of subindex - 1*/
                     UNS32 master_obj1600[] = 
                     {
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
                       0x0,	/* 0 */
                       0x0,	/* 0 */
                       0x0,	/* 0 */
@@ -346,37 +322,13 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                        { RW, uint32, sizeof (UNS32), (void*)&master_obj1600[0] },
                        { RW, uint32, sizeof (UNS32), (void*)&master_obj1600[1] },
                        { RW, uint32, sizeof (UNS32), (void*)&master_obj1600[2] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1600[3] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1600[4] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1600[5] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1600[6] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1600[7] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1600[8] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1600[9] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1600[10] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1600[11] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1600[12] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1600[13] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1600[14] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1600[15] }
+                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1600[3] }
                      };
 
 /* index 0x1601 :   Receive PDO 2 Mapping. */
-                    UNS8 master_highestSubIndex_obj1601 = 16; /* number of subindex - 1*/
+                    UNS8 master_highestSubIndex_obj1601 = 4; /* number of subindex - 1*/
                     UNS32 master_obj1601[] = 
                     {
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
                       0x0,	/* 0 */
                       0x0,	/* 0 */
                       0x0,	/* 0 */
@@ -388,19 +340,25 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                        { RW, uint32, sizeof (UNS32), (void*)&master_obj1601[0] },
                        { RW, uint32, sizeof (UNS32), (void*)&master_obj1601[1] },
                        { RW, uint32, sizeof (UNS32), (void*)&master_obj1601[2] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1601[3] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1601[4] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1601[5] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1601[6] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1601[7] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1601[8] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1601[9] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1601[10] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1601[11] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1601[12] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1601[13] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1601[14] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1601[15] }
+                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1601[3] }
+                     };
+
+/* index 0x1602 :   Receive PDO 3 Mapping. */
+                    UNS8 master_highestSubIndex_obj1602 = 4; /* number of subindex - 1*/
+                    UNS32 master_obj1602[] = 
+                    {
+                      0x0,	/* 0 */
+                      0x0,	/* 0 */
+                      0x0,	/* 0 */
+                      0x0	/* 0 */
+                    };
+                    subindex master_Index1602[] = 
+                     {
+                       { RW, uint8, sizeof (UNS8), (void*)&master_highestSubIndex_obj1602 },
+                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1602[0] },
+                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1602[1] },
+                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1602[2] },
+                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1602[3] }
                      };
 
 /* index 0x1800 :   Transmit PDO 1 Parameter. */
@@ -433,19 +391,9 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                      };
 
 /* index 0x1A00 :   Transmit PDO 1 Mapping. */
-                    UNS8 master_highestSubIndex_obj1A00 = 16; /* number of subindex - 1*/
+                    UNS8 master_highestSubIndex_obj1A00 = 6; /* number of subindex - 1*/
                     UNS32 master_obj1A00[] = 
                     {
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
-                      0x0,	/* 0 */
                       0x0,	/* 0 */
                       0x0,	/* 0 */
                       0x0,	/* 0 */
@@ -461,96 +409,55 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                        { RW, uint32, sizeof (UNS32), (void*)&master_obj1A00[2] },
                        { RW, uint32, sizeof (UNS32), (void*)&master_obj1A00[3] },
                        { RW, uint32, sizeof (UNS32), (void*)&master_obj1A00[4] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1A00[5] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1A00[6] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1A00[7] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1A00[8] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1A00[9] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1A00[10] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1A00[11] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1A00[12] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1A00[13] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1A00[14] },
-                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1A00[15] }
+                       { RW, uint32, sizeof (UNS32), (void*)&master_obj1A00[5] }
                      };
 
 /* index 0x2000 :   Mapped variable motoRealtimeData */
-                    UNS8 master_highestSubIndex_obj2000 = 16; /* number of subindex - 1*/
+                    UNS8 master_highestSubIndex_obj2000 = 8; /* number of subindex - 1*/
                     subindex master_Index2000[] = 
                      {
                        { RO, uint8, sizeof (UNS8), (void*)&master_highestSubIndex_obj2000 },
-                       { RW, uint8, sizeof (UNS8), (void*)&motoRealtimeData[0] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motoRealtimeData[1] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motoRealtimeData[2] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motoRealtimeData[3] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motoRealtimeData[4] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motoRealtimeData[5] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motoRealtimeData[6] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motoRealtimeData[7] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motoRealtimeData[8] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motoRealtimeData[9] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motoRealtimeData[10] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motoRealtimeData[11] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motoRealtimeData[12] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motoRealtimeData[13] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motoRealtimeData[14] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motoRealtimeData[15] }
+                       { RW, int16, sizeof (INTEGER16), (void*)&motoRealtimeData[0] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motoRealtimeData[1] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motoRealtimeData[2] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motoRealtimeData[3] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motoRealtimeData[4] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motoRealtimeData[5] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motoRealtimeData[6] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motoRealtimeData[7] }
                      };
 
 /* index 0x2001 :   Mapped variable motorSettings */
-                    UNS8 master_highestSubIndex_obj2001 = 26; /* number of subindex - 1*/
+                    UNS8 master_highestSubIndex_obj2001 = 15; /* number of subindex - 1*/
                     subindex master_Index2001[] = 
                      {
                        { RO, uint8, sizeof (UNS8), (void*)&master_highestSubIndex_obj2001 },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[0] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[1] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[2] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[3] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[4] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[5] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[6] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[7] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[8] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[9] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[10] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[11] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[12] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[13] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[14] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[15] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[16] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[17] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[18] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[19] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[20] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[21] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[22] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[23] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[24] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorSettings[25] }
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorSettings[0] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorSettings[1] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorSettings[2] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorSettings[3] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorSettings[4] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorSettings[5] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorSettings[6] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorSettings[7] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorSettings[8] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorSettings[9] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorSettings[10] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorSettings[11] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorSettings[12] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorSettings[13] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorSettings[14] }
                      };
 
 /* index 0x2002 :   Mapped variable motorPara */
-                    UNS8 master_highestSubIndex_obj2002 = 16; /* number of subindex - 1*/
+                    UNS8 master_highestSubIndex_obj2002 = 4; /* number of subindex - 1*/
                     subindex master_Index2002[] = 
                      {
                        { RO, uint8, sizeof (UNS8), (void*)&master_highestSubIndex_obj2002 },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorPara[0] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorPara[1] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorPara[2] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorPara[3] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorPara[4] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorPara[5] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorPara[6] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorPara[7] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorPara[8] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorPara[9] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorPara[10] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorPara[11] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorPara[12] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorPara[13] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorPara[14] },
-                       { RW, uint8, sizeof (UNS8), (void*)&motorPara[15] }
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorPara[0] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorPara[1] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorPara[2] },
+                       { RW, int16, sizeof (INTEGER16), (void*)&motorPara[3] }
                      };
 
 /**************************************************************************/
@@ -569,8 +476,10 @@ const indextable master_objdict[] =
   { (subindex*)master_Index1280,sizeof(master_Index1280)/sizeof(master_Index1280[0]), 0x1280},
   { (subindex*)master_Index1400,sizeof(master_Index1400)/sizeof(master_Index1400[0]), 0x1400},
   { (subindex*)master_Index1401,sizeof(master_Index1401)/sizeof(master_Index1401[0]), 0x1401},
+  { (subindex*)master_Index1402,sizeof(master_Index1402)/sizeof(master_Index1402[0]), 0x1402},
   { (subindex*)master_Index1600,sizeof(master_Index1600)/sizeof(master_Index1600[0]), 0x1600},
   { (subindex*)master_Index1601,sizeof(master_Index1601)/sizeof(master_Index1601[0]), 0x1601},
+  { (subindex*)master_Index1602,sizeof(master_Index1602)/sizeof(master_Index1602[0]), 0x1602},
   { (subindex*)master_Index1800,sizeof(master_Index1800)/sizeof(master_Index1800[0]), 0x1800},
   { (subindex*)master_Index1A00,sizeof(master_Index1A00)/sizeof(master_Index1A00[0]), 0x1A00},
   { (subindex*)master_Index2000,sizeof(master_Index2000)/sizeof(master_Index2000[0]), 0x2000},
@@ -593,13 +502,15 @@ const indextable * master_scanIndexOD (CO_Data* d, UNS16 wIndex, UNS32 * errorCo
 		case 0x1280: i = 7;break;
 		case 0x1400: i = 8;break;
 		case 0x1401: i = 9;break;
-		case 0x1600: i = 10;break;
-		case 0x1601: i = 11;break;
-		case 0x1800: i = 12;break;
-		case 0x1A00: i = 13;break;
-		case 0x2000: i = 14;break;
-		case 0x2001: i = 15;break;
-		case 0x2002: i = 16;break;
+		case 0x1402: i = 10;break;
+		case 0x1600: i = 11;break;
+		case 0x1601: i = 12;break;
+		case 0x1602: i = 13;break;
+		case 0x1800: i = 14;break;
+		case 0x1A00: i = 15;break;
+		case 0x2000: i = 16;break;
+		case 0x2001: i = 17;break;
+		case 0x2002: i = 18;break;
 		default:
 			*errorCode = OD_NO_SUCH_OBJECT;
 			return NULL;
@@ -619,18 +530,18 @@ const quick_index master_firstIndex = {
   0, /* SDO_SVR */
   7, /* SDO_CLT */
   8, /* PDO_RCV */
-  10, /* PDO_RCV_MAP */
-  12, /* PDO_TRS */
-  13 /* PDO_TRS_MAP */
+  11, /* PDO_RCV_MAP */
+  14, /* PDO_TRS */
+  15 /* PDO_TRS_MAP */
 };
 
 const quick_index master_lastIndex = {
   0, /* SDO_SVR */
   7, /* SDO_CLT */
-  9, /* PDO_RCV */
-  11, /* PDO_RCV_MAP */
-  12, /* PDO_TRS */
-  13 /* PDO_TRS_MAP */
+  10, /* PDO_RCV */
+  13, /* PDO_RCV_MAP */
+  14, /* PDO_TRS */
+  15 /* PDO_TRS_MAP */
 };
 
 const UNS16 master_ObjdictSize = sizeof(master_objdict)/sizeof(master_objdict[0]); 

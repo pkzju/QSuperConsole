@@ -475,10 +475,6 @@ QMenu#titleMenu:indicator {
 
 
 
-QScrollArea QWidget
-{   
-	background-color:transparent;
-}
 
 QToolBar {
     spacing: 0px; /* spacing between items in the tool bar */
@@ -553,14 +549,22 @@ QHeaderView::section {
 
 /* ******************QTableWidget****************** */
 
+
+QScrollArea 
+{   
+	background-color:transparent;
+}
+
+
 /* ******************QScrollBar****************** */
 QScrollBar:vertical {
     width: 10px;
     margin: 0px 0px 0px 0px;
-    background: white;
+    background: transparent;
 }
 QScrollBar::handle:vertical {
-    background: rgb(70, 97, 102);
+    /*background: rgb(70, 97, 102);*/
+	background: rgb(195, 195, 195);
     min-height: 1px;
 }
 
@@ -588,12 +592,12 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
 
 
 QScrollBar:horizontal {
-    background: white;
+    background: transparent;
     height: 10px;
     margin: 0px 0px 0px 0px;
 }
 QScrollBar::handle:horizontal {
-    background: rgb(70, 97, 102);
+    background: rgb(195, 195, 195);
     min-width: 1px;
 }
 QScrollBar::add-line:horizontal {
