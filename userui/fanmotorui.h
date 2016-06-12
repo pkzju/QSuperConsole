@@ -43,6 +43,10 @@ public:
         MultiMotor,
         Searching,
     };
+    static FanMotorUi *getS_Instance();
+    void heartbeatError(CO_Data *d, unsigned char heartbeatID);
+    void post_sync(CO_Data *d);
+    void post_SlaveStateChange(CO_Data *d, unsigned char nodeId, e_nodeState newNodeState);
 
 private slots:
 
@@ -82,9 +86,11 @@ private slots:
 
     void on_radioButton_tcp_clicked();
 
+
 private:
     QModbusDataUnit readRequest() const;
     QModbusDataUnit writeRequest() const;
+    void sendOnePolling(int address);
 
 signals:
     void updatePlotUi(FanMotorController motorctr);
@@ -104,10 +110,12 @@ private:
     PollingState m_pollingState;
     Communication m_communication;
 
+    bool m_CANopenStart;
+
     s_BOARD *m_masterBoard;
     CanThread *m_canThread;
 
-    void sendOnePolling(int address);
+    static FanMotorUi *s_Instance;
 
 };
 

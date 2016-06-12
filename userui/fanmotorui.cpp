@@ -12,20 +12,67 @@
 #include"fanmotor/qmotor.h"
 #include "userui/mplotui.h"
 
+FanMotorUi *FanMotorUi::s_Instance = nullptr;
+
+
+void FanMotorUi::heartbeatError(CO_Data *d, unsigned char heartbeatID)
+{
+    UNS8 __address = heartbeatID - 1;
+
+    m_motors.at(__address)->m_communicationState =FanCommunicationState::m_disconnect;
+
+    m_motors.at(__address)->update();
+
+    if(heartbeatID == m_realTimeServerAddress){
+        ui->lamp_comState->setLampState(m_motors.at(__address)->m_commLamp->getLampState());
+    }
+
+    qDebug()<<d->nodeState<<"heartbeatError"<<heartbeatID;
+}
 void master_heartbeatError(CO_Data* d, UNS8 heartbeatID)
 {
+    FanMotorUi::getS_Instance()->heartbeatError(d, heartbeatID);
 
 }
+
 void master_post_sync(CO_Data* d)
 {
+//    qDebug()<<d->nodeState;
+}
+
+void FanMotorUi::post_SlaveStateChange(CO_Data* d, UNS8 nodeId, e_nodeState newNodeState)
+{
+    UNS8 __address = nodeId - 1;
+    if(newNodeState == Disconnected){
+        m_motors.at(__address)->m_communicationState =FanCommunicationState::m_disconnect;
+    }
+    else{
+        m_motors.at(__address)->m_communicationState =FanCommunicationState::m_connect;
+    }
+
+    m_motors.at(__address)->update();
+
+    if(nodeId == m_realTimeServerAddress){
+        ui->lamp_comState->setLampState(m_motors.at(__address)->m_commLamp->getLampState());
+    }
+
+    qDebug()<<d->nodeState<<"post_SlaveStateChange"<<nodeId<<newNodeState;
+}
+
+void master_post_SlaveStateChange(CO_Data* d, UNS8 nodeId, e_nodeState newNodeState)
+{
+    FanMotorUi::getS_Instance()->post_SlaveStateChange(d,nodeId,newNodeState);
+
 }
 
 UNS32 OnMotoRealtimeDataUpdate(CO_Data* d, const indextable * unsused_indextable, UNS8 unsused_bSubindex)
 {
+    qDebug()<<d->nodeState<<"OnMotoRealtimeDataUpdate"<<unsused_indextable->bSubCount<<unsused_bSubindex;
     return 0;
 }
 UNS32 OnMotorParaUpdate(CO_Data* d, const indextable * unsused_indextable, UNS8 unsused_bSubindex)
 {
+    qDebug()<<d->nodeState<<"OnMotorParaUpdate"<<unsused_indextable->bSubCount<<unsused_bSubindex;
     return 0;
 }
 
@@ -77,6 +124,8 @@ FanMotorUi::FanMotorUi(QWidget *parent) :
 
     m_pollingState = PollingState::Stop;
 
+    m_CANopenStart = false;
+
     ui->startButton->setEnabled(false);
     ui->searchButton->setEnabled(false);
     ui->pushButton_read->setEnabled(false);
@@ -91,9 +140,6 @@ FanMotorUi::FanMotorUi(QWidget *parent) :
     m_modbusUi = ModbusUi::getInstance();
     modbusDevice = m_modbusUi->getModbusDevice();
     on_radioButton_modbus_clicked();
-
-
-
 
 
     m_realTimeServerAddress = ui->spinBox_currentaddress->value();
@@ -201,6 +247,20 @@ void FanMotorUi::on_connectButton_clicked()//open
         master_Data.heartbeatError = master_heartbeatError;
         master_Data.post_sync = master_post_sync;
 
+        master_Data.post_SlaveStateChange = master_post_SlaveStateChange;
+
+        for(int i = 1; i <= m_motorNum; i++){//Heartbeat
+
+            {//0x1016 :   Consumer Heartbeat Time  nodeid(bit 23 : 16) + time(bit 15 : 0) ms
+                UNS32 _sourceData = 1100 + (i << 16);
+                UNS32 _dataSize = sizeof(UNS32);
+                if(OD_SUCCESSFUL != writeLocalDict(&master_Data, (UNS16)0x1016, (UNS8)i, (UNS32*)&_sourceData, &_dataSize, 1 )){
+                    ui->textBrowser->append(tr("writeLocalDict 0x1016 %1: fail !").arg(i));
+                }
+            }
+
+        }
+
         TimerInit();
         StartTimerLoop(&InitNodes);
 
@@ -232,6 +292,10 @@ void FanMotorUi::on_connectButton_clicked()//open
 void FanMotorUi::on_disconnectButton_clicked()//close
 {
     if(m_communication == Communication::CANbus){
+
+        if(m_CANopenStart){
+            on_startButton_clicked();
+        }
 
         m_canThread->mStop();               //then close thread
         disconnect(m_canThread, SIGNAL(message(QString)),
@@ -525,32 +589,127 @@ void FanMotorUi::on_searchButton_clicked()
 
 void FanMotorUi::on_startButton_clicked()
 {
-    //Multi motor mode start
-    if(!m_pollingTimer->isActive()){
+    if(m_communication == Communication::Modbus){
+        //Multi motor mode start
+        if(!m_pollingTimer->isActive()){
 
-        m_pollingState = PollingState::MultiMotor;
+            m_pollingState = PollingState::MultiMotor;
 
-        m_currentServerAddress = m_startServerAddress;
-        for(m_currentServerAddress;m_currentServerAddress < m_motorNum + m_startServerAddress; \
-            m_currentServerAddress++){
-            if(m_motors.at(m_currentServerAddress-m_startServerAddress)->m_communicationState == \
-                    FanCommunicationState::m_connect){
-                sendOnePolling(m_currentServerAddress);
-                break;
+            m_currentServerAddress = m_startServerAddress;
+            for(m_currentServerAddress;m_currentServerAddress < m_motorNum + m_startServerAddress; \
+                m_currentServerAddress++){
+                if(m_motors.at(m_currentServerAddress-m_startServerAddress)->m_communicationState == \
+                        FanCommunicationState::m_connect){
+                    sendOnePolling(m_currentServerAddress);
+                    break;
+                }
             }
-        }
-        m_pollingTimer->start(ui->spinBox_timePeriod->value());
+            m_pollingTimer->start(ui->spinBox_timePeriod->value());
 
-        ui->startButton->setText(QStringLiteral("stop "));
-        ui->pushButton_startMotor->setEnabled(false);
-        ui->pushButton_stopMotor->setEnabled(false);
+            ui->startButton->setText(QStringLiteral("stop "));
+            ui->pushButton_startMotor->setEnabled(false);
+            ui->pushButton_stopMotor->setEnabled(false);
+
+            ui->spinBox_motorNum->setEnabled(false);
+        }
+        else{
+            m_pollingState = PollingState::Stop;
+            m_pollingTimer->stop();
+            ui->startButton->setText(QStringLiteral("start"));
+            ui->pushButton_startMotor->setEnabled(true);
+            ui->pushButton_stopMotor->setEnabled(true);
+
+            ui->spinBox_motorNum->setEnabled(true);
+        }
     }
-    else{
-        m_pollingState = PollingState::Stop;
-        m_pollingTimer->stop();
-        ui->startButton->setText(QStringLiteral("start"));
-        ui->pushButton_startMotor->setEnabled(true);
-        ui->pushButton_stopMotor->setEnabled(true);
+    else if(m_communication == Communication::CANbus){
+        if(!m_CANopenStart){
+
+            //pdo config
+            {//0x1600 :   RPDO1 COB-ID 0x180 + nodeid
+                UNS32 _sourceData = 0x180 + 1;
+                UNS32 _dataSize = sizeof(UNS32);
+                if(OD_SUCCESSFUL != writeLocalDict(&master_Data, (UNS16)0x1400, (UNS8)1, (UNS32*)&_sourceData, &_dataSize, 1 )){
+                    ui->textBrowser->append("writeLocalDict 0x1400 fail !");
+                }
+            }
+            {//0x1600 :   RPDO2 COB-ID 0x180 + nodeid
+                UNS32 _sourceData = 0x280 + 1;
+                UNS32 _dataSize = sizeof(UNS32);
+                if(OD_SUCCESSFUL != writeLocalDict(&master_Data, (UNS16)0x1401, (UNS8)1, (UNS32*)&_sourceData, &_dataSize, 1 )){
+                    ui->textBrowser->append("writeLocalDict 0x1400 fail !");
+                }
+            }
+
+            //SYNC config
+            {//0x1005 :   SYNC COB ID gen(bit 30) COB-ID : 80
+                UNS32 _sourceData = 0x40000080;
+                UNS32 _dataSize = sizeof(UNS32);
+                if(OD_SUCCESSFUL != writeLocalDict(&master_Data, (UNS16)0x1005, (UNS8)0, &_sourceData, &_dataSize, 1 )){
+                    ui->textBrowser->append("writeLocalDict 0x1005 fail !");
+                }
+            }
+
+            {//0x1006 :   SYNC Cycle Period   us
+                UNS32 _sourceData = 500000;
+                UNS32 _dataSize = sizeof(UNS32);
+                if(OD_SUCCESSFUL != writeLocalDict(&master_Data, (UNS16)0x1006, (UNS8)0, &_sourceData, &_dataSize, 1 )){
+                    ui->textBrowser->append("writeLocalDict 0x1006 fail !");
+                }
+            }
+
+            for(int i = 1; i <= m_motorNum; i++){
+
+                {//0x1016 :   Consumer Heartbeat Time  nodeid(bit 23 : 16) + time(bit 15 : 0) ms
+                    UNS32 _sourceData = 1100 + (i << 16);
+                    UNS32 _dataSize = sizeof(UNS32);
+                    if(OD_SUCCESSFUL != writeLocalDict(&master_Data, (UNS16)0x1016, (UNS8)i, (UNS32*)&_sourceData, &_dataSize, 1 )){
+                        ui->textBrowser->append(tr("writeLocalDict 0x1016 %1: fail !").arg(i));
+                    }
+                }
+
+                masterSendNMTstateChange (&master_Data, i, NMT_Start_Node);
+            }
+
+            m_CANopenStart = true;
+            ui->startButton->setText(QStringLiteral("stop "));
+            ui->pushButton_startMotor->setEnabled(false);
+            ui->pushButton_stopMotor->setEnabled(false);
+
+            ui->spinBox_motorNum->setEnabled(false);
+        }
+        else{
+
+            for(int i = 1; i <= m_motorNum; i++){
+                masterSendNMTstateChange (&master_Data, i, NMT_Stop_Node);
+            }
+
+            {//0x1005 :   SYNC COB ID gen(bit 30) COB-ID : 80
+                UNS32 _sourceData = 0x00000080;
+                UNS32 _dataSize = sizeof(UNS32);
+                if(OD_SUCCESSFUL != writeLocalDict(&master_Data, (UNS16)0x1005, (UNS8)0, (UNS32*)&_sourceData, &_dataSize, 1 )){
+                    ui->textBrowser->append("writeLocalDict 0x1005 fail !");
+                }
+            }
+
+            {//0x1006 :   SYNC Cycle Period   us
+                UNS32 _sourceData = 0;
+                UNS32 _dataSize = sizeof(UNS32);
+                if(OD_SUCCESSFUL != writeLocalDict(&master_Data, (UNS16)0x1006, (UNS8)0, (UNS32*)&_sourceData, &_dataSize, 1 )){
+                    ui->textBrowser->append("writeLocalDict 0x1006 fail !");
+                }
+            }
+
+            m_CANopenStart = false;
+            ui->startButton->setText(QStringLiteral("start"));
+            ui->pushButton_startMotor->setEnabled(true);
+            ui->pushButton_stopMotor->setEnabled(true);
+
+            ui->spinBox_motorNum->setEnabled(true);
+        }
+    }
+    else{//tcp
+
     }
 
 }
@@ -675,8 +834,13 @@ void FanMotorUi::on_spinBox_currentaddress_valueChanged(int arg1)
 }
 
 
-
-
-
+FanMotorUi *FanMotorUi::getS_Instance()
+{
+    if(!s_Instance)
+    {
+        s_Instance = new FanMotorUi;
+    }
+    return s_Instance;
+}
 
 

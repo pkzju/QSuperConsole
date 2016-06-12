@@ -44,7 +44,7 @@ void CenterWindow::initUI()
     SerialPortUi *serialport = new SerialPortUi;
     MPlotUi *plotUi = MPlotUi::getInstance();
     ModbusUi *modbusui = ModbusUi::getInstance();
-    FanMotorUi *fanmotorui = new FanMotorUi;
+    FanMotorUi *fanmotorui = FanMotorUi::getS_Instance();
 
     addWidget(QStringLiteral("Home"), "Home", fanmotorui);
     addWidget(QStringLiteral("Scope"), "MathPlot", plotUi);

@@ -8,7 +8,7 @@
 
 extern CO_Data master_Data;
 
-CANUi *CANUi::s_Instance = 0;
+CANUi *CANUi::s_Instance = nullptr;
 
 
 

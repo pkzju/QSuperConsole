@@ -58,8 +58,14 @@ void QMotor::update()
 
     if(m_motorController.m_runState == FanMotorState::m_run)
         m_runLamp->setLampState(QcwIndicatorLamp::lamp_green);
-    else
+    else if(m_motorController.m_runState == FanMotorState::m_stop)
         m_runLamp->setLampState(QcwIndicatorLamp::lamp_red);
+    else if(m_motorController.m_runState == FanMotorState::m_error){
+        m_runLamp->setLampState(QcwIndicatorLamp::lamp_yellow);
+    }
+    else{
+        m_runLamp->setLampState(QcwIndicatorLamp::lamp_grey);
+    }
 
     if(m_communicationState == FanCommunicationState::m_connect)
         m_commLamp->setLampState(QcwIndicatorLamp::lamp_green);
@@ -67,5 +73,7 @@ void QMotor::update()
         m_commLamp->setLampState(QcwIndicatorLamp::lamp_red);
     else if(m_communicationState == FanCommunicationState::m_comError)
         m_commLamp->setLampState(QcwIndicatorLamp::lamp_yellow);
+    else
+        m_commLamp->setLampState(QcwIndicatorLamp::lamp_grey);
 
 }
