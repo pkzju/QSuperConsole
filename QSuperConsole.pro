@@ -21,7 +21,7 @@ TEMPLATE = app
 DEPENDPATH += .
 
 include(./QFramer/QFramer.pri)
-include(./canOpen/canopen.pri)
+include(./canopen/canopen.pri)
 include(./userui/userui.pri)
 
 # build dir
